@@ -1,0 +1,52 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Learn about suspicious URLs and phishing warning signs.">
+  <title>PhishGuard BD</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <header>
+    <h1>PhishGuard BD</h1>
+    <p>Learn to recognize suspicious links.</p>
+  </header>
+
+  <main>
+    <section class="scanner">
+      <h2>Analyze a URL</h2>
+      <p>Enter a web address to check for common warning signs.</p>
+
+      <form id="url-form">
+        <label for="url-input">Website URL</label>
+        <input id="url-input" type="text"
+          placeholder="https://example.com" required>
+        <button type="submit">Analyze URL</button>
+      </form>
+
+      <div id="results" aria-live="polite"></div>
+    </section>
+
+    <section class="education">
+      <h2>Stay alert online</h2>
+      <ul>
+        <li>Check domain names carefully.</li>
+        <li>Be cautious of unexpected password requests.</li>
+        <li>HTTPS does not guarantee that a site is trustworthy.</li>
+        <li>Never enter sensitive information to test a link.</li>
+      </ul>
+    </section>
+
+    <p class="disclaimer">
+      Educational tool only. Results are not a security guarantee.
+    </p>
+  </main>
+
+  <footer>
+    <p>PhishGuard BD | A cybersecurity learning project</p>
+  </footer>
+</body>
+</html>
