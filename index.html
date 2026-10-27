@@ -1,52 +1,216 @@
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Learn about suspicious URLs and phishing warning signs.">
-  <title>PhishGuard BD</title>
+  <meta name="description" content="PhishGuard BD helps people learn to recognize suspicious links and phishing warning signs.">
+  <meta name="theme-color" content="#111923">
+  <title>PhishGuard BD | Think Before You Click</title>
   <link rel="stylesheet" href="style.css">
   <script src="script.js" defer></script>
 </head>
 <body>
-  <header>
-    <h1>PhishGuard BD</h1>
-    <p>Learn to recognize suspicious links.</p>
+  <header class="site-header" id="home">
+    <nav class="navbar" aria-label="Main navigation">
+      <a class="brand" href="#home">
+        <span class="brand-shield" aria-hidden="true">⬟</span>
+        PhishGuard<span class="brand-bd">BD</span>
+      </a>
+
+      <button class="menu-toggle" type="button"
+        aria-label="Open navigation" aria-expanded="false"
+        aria-controls="nav-links">☰</button>
+
+      <div class="nav-links" id="nav-links">
+        <a href="#home">Home</a>
+        <a href="#features">Features</a>
+        <a href="#how-it-works">How It Works</a>
+        <a href="#about">About</a>
+        <a class="nav-cta" href="#scanner">Try Now</a>
+      </div>
+    </nav>
   </header>
 
   <main>
-    <section class="scanner">
-      <h2>Analyze a URL</h2>
-      <p>Enter a web address to check for common warning signs.</p>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow">YOUR FIRST LINE OF DIGITAL DEFENSE</p>
 
-      <form id="url-form">
-        <label for="url-input">Website URL</label>
-        <input id="url-input" type="text"
-          placeholder="https://example.com" required>
-        <button type="submit">Analyze URL</button>
-      </form>
+        <h1 id="hero-title">
+          Protect Yourself<br>
+          from <span class="accent-text">Phishing</span>
+        </h1>
 
-      <div id="results" aria-live="polite"></div>
+        <p class="hero-description">
+          One suspicious link can put your personal information at risk.
+          Learn to recognize common phishing warning signs before you click.
+        </p>
+
+        <div class="hero-actions">
+          <a class="button button-primary" href="#scanner">Try It Now <span aria-hidden="true">→</span></a>
+          <a class="button button-secondary" href="#how-it-works">Learn More</a>
+        </div>
+
+        <p class="hero-note">
+          <span class="status-dot" aria-hidden="true"></span>
+          Learn. Check. Stay safer online.
+        </p>
+      </div>
+
+      <div class="hero-visual" aria-label="Animated phishing-awareness illustration">
+        <div class="visual-glow"></div>
+
+        <div class="visual-scene">
+          <div class="scene-topline">
+            <span class="scene-dot"></span>
+            <span class="scene-dot"></span>
+            <span class="scene-dot"></span>
+            <span class="scene-label">INBOX SECURITY</span>
+          </div>
+
+          <div class="laptop">
+            <div class="laptop-screen">
+              <div class="screen-header">
+                <span>✉</span>
+                <span>Incoming message</span>
+                <span class="screen-menu">•••</span>
+              </div>
+
+              <div class="email-card">
+                <div class="email-icon" aria-hidden="true">✉</div>
+                <div class="email-lines" aria-hidden="true">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+                <div class="email-warning">URGENT: Verify your account!</div>
+                <div class="fake-link">account-verify.example</div>
+                <div class="email-button">VERIFY NOW</div>
+              </div>
+
+              <div class="scan-line"></div>
+            </div>
+
+            <div class="laptop-base">
+              <div class="keyboard"></div>
+              <div class="trackpad"></div>
+            </div>
+          </div>
+
+          <div class="floating-shield" aria-hidden="true">!</div>
+          <div class="floating-mail" aria-hidden="true">✉</div>
+          <div class="floating-alert" aria-hidden="true">⚠</div>
+
+          <div class="scene-caption">
+            <span class="caption-dot"></span>
+            SPOT THE WARNING SIGNS
+          </div>
+        </div>
+
+        <p class="visual-disclaimer">
+          Illustration for awareness — not a live email scan.
+        </p>
+      </div>
     </section>
 
-    <section class="education">
-      <h2>Stay alert online</h2>
-      <ul>
-        <li>Check domain names carefully.</li>
-        <li>Be cautious of unexpected password requests.</li>
-        <li>HTTPS does not guarantee that a site is trustworthy.</li>
-        <li>Never enter sensitive information to test a link.</li>
+    <section class="scanner section-block" id="scanner">
+      <div class="section-heading">
+        <p class="eyebrow">CHECK BEFORE YOU CLICK</p>
+        <h2>Examine a suspicious link</h2>
+        <p>Check the URL for common warning signs. No website is guaranteed safe by this check.</p>
+      </div>
+
+      <form id="url-form" class="scanner-form">
+        <label for="url-input">Website URL</label>
+        <div class="input-row">
+          <input id="url-input" name="url" type="text"
+            placeholder="https://example.com"
+            autocomplete="url" spellcheck="false" required>
+          <button class="button button-primary" type="submit">Analyze URL <span aria-hidden="true">→</span></button>
+        </div>
+      </form>
+
+      <div id="results" aria-live="polite" class="results"></div>
+      <p class="scanner-note">Privacy tip: never enter passwords or other personal information into a link to test it.</p>
+    </section>
+
+    <section class="features section-block" id="features">
+      <div class="section-heading">
+        <p class="eyebrow">BUILT FOR AWARENESS</p>
+        <h2>Small checks. Smarter choices.</h2>
+      </div>
+
+      <div class="feature-grid">
+        <article class="feature-card">
+          <span class="feature-icon" aria-hidden="true">⌕</span>
+          <h3>URL pattern checks</h3>
+          <p>Review common URL characteristics that can deserve a closer look.</p>
+        </article>
+
+        <article class="feature-card">
+          <span class="feature-icon" aria-hidden="true">⚑</span>
+          <h3>Clear explanations</h3>
+          <p>Understand why a particular URL pattern may be suspicious.</p>
+        </article>
+
+        <article class="feature-card">
+          <span class="feature-icon" aria-hidden="true">◇</span>
+          <h3>Safety education</h3>
+          <p>Build better habits before opening unexpected links or messages.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="how-section section-block" id="how-it-works">
+      <div class="section-heading">
+        <p class="eyebrow">THREE SIMPLE STEPS</p>
+        <h2>How it works</h2>
+      </div>
+
+      <div class="steps-grid">
+        <article class="step-card">
+          <span class="step-number">01</span>
+          <h3>Copy the URL</h3>
+          <p>Use the web address you want to examine. You do not need to open it.</p>
+        </article>
+        <article class="step-card">
+          <span class="step-number">02</span>
+          <h3>Run the check</h3>
+          <p>PhishGuard BD reviews selected URL patterns for potential warning signs.</p>
+        </article>
+        <article class="step-card">
+          <span class="step-number">03</span>
+          <h3>Review the advice</h3>
+          <p>Use the findings as guidance, not as a guarantee of safety.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="education section-block" id="about">
+      <div class="education-copy">
+        <p class="eyebrow">STAY ALERT ONLINE</p>
+        <h2>Think before you click.</h2>
+        <p>Phishing messages often create urgency to make people act without checking carefully.</p>
+      </div>
+      <ul class="safety-list">
+        <li>Check the actual domain name carefully.</li>
+        <li>Be cautious of unexpected password or payment requests.</li>
+        <li>Remember: HTTPS does not prove a website is trustworthy.</li>
+        <li>When unsure, visit the organization's official site directly.</li>
       </ul>
     </section>
 
     <p class="disclaimer">
-      Educational tool only. Results are not a security guarantee.
+      PhishGuard BD is an educational project. It checks URL patterns only and does not verify live website reputation or content. Results may be incorrect or incomplete.
     </p>
   </main>
 
-  <footer>
-    <p>PhishGuard BD | A cybersecurity learning project</p>
+  <footer class="site-footer">
+    <a class="brand" href="#home">⬟ PhishGuard<span class="brand-bd">BD</span></a>
+    <p>Built for a safer digital Bangladesh.</p>
+    <p class="footer-small">An independent cybersecurity learning project.</p>
   </footer>
 </body>
 </html>
