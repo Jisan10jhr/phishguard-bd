@@ -3,13 +3,16 @@
  * PhishGuard BD
  * Educational URL analysis tool
  *
- * Rule-based warnings are not a probability of maliciousness.
+ * Important:
+ * This is a rule-based educational checker, not a
+ * malware scanner or a live website reputation service.
  */
 
 const form = document.getElementById("url-form");
 const input = document.getElementById("url-input");
 const results = document.getElementById("results");
 
+// Check that the required HTML elements exist.
 if (!form || !input || !results) {
   console.error(
     "PhishGuard BD: Missing url-form, url-input, or results element. Check index.html."
@@ -28,6 +31,7 @@ if (!form || !input || !results) {
 
     let url;
 
+    // Add HTTPS when the user omits the protocol.
     try {
       const candidate = /^[a-z][a-z0-9+.-]*:\/\//i.test(raw)
         ? raw
@@ -39,7 +43,11 @@ if (!form || !input || !results) {
         throw new Error("Unsupported protocol");
       }
 
-      if (!url.hostname.includes(".")) {
+      if (
+        !url.hostname.includes(".") ||
+        url.hostname.startsWith(".") ||
+        url.hostname.endsWith(".")
+      ) {
         throw new Error("Invalid hostname");
       }
     } catch {
@@ -51,51 +59,61 @@ if (!form || !input || !results) {
     const warnings = [];
     let score = 0;
     const hostname = url.hostname.toLowerCase();
+    const parts = hostname.split(".");
 
+    // Add a warning and its illustrative score.
     function addWarning(message, points) {
       warnings.push(message);
       score += points;
     }
 
+    // 1. Check the connection protocol.
     if (url.protocol !== "https:") {
       addWarning(
-        "Uses HTTP rather than HTTPS. The connection may not be encrypted.",
+        "The URL uses HTTP instead of HTTPS. The connection may not be encrypted.",
         15
       );
     }
 
+    // 2. Check for credentials embedded in the URL.
     if (url.username || url.password) {
       addWarning(
-        "Contains embedded user information before the hostname. Verify the actual destination.",
+        "The URL contains embedded user information before the hostname. Verify the actual destination.",
         25
       );
     }
 
-    const parts = hostname.split(".");
-    const ipv4 = /^(?:\d{1,3}\.){3}\d{1,3}$/.test(hostname) &&
-      hostname.split(".").every(part => Number(part) >= 0 && Number(part) <= 255);
+    // 3. Check for an IPv4 address used as the hostname.
+    const isIPv4 =
+      /^(?:\d{1,3}\.){3}\d{1,3}$/.test(hostname) &&
+      hostname.split(".").every(
+        part => Number(part) >= 0 && Number(part) <= 255
+      );
 
-    if (ipv4) {
+    if (isIPv4) {
       addWarning(
-        "Uses an IPv4 address instead of a conventional domain name.",
+        "The hostname is an IPv4 address rather than a conventional domain name.",
         20
       );
     }
 
+    // 4. Check for encoded domain labels.
     if (parts.some(part => part.startsWith("xn--"))) {
       addWarning(
-        "Contains an encoded domain label. Check carefully for lookalike characters.",
+        "The domain contains an encoded hostname label. Check carefully for lookalike characters.",
         20
       );
     }
 
+    // 5. Check for many subdomain levels.
     if (parts.length >= 5) {
       addWarning(
-        "Has several hostname levels. Check the actual domain carefully.",
+        "The hostname has several subdomain levels. Verify the actual registered domain.",
         10
       );
     }
 
+    // 6. A hyphen is only a contextual warning sign.
     if (hostname.includes("-")) {
       addWarning(
         "The hostname contains a hyphen. This is not malicious by itself.",
@@ -103,38 +121,66 @@ if (!form || !input || !results) {
       );
     }
 
+    // 7. Check for unusually long URLs.
+    if (raw.length > 100) {
+      addWarning(
+        "The URL is unusually long. Long URLs are not necessarily malicious, so inspect the destination carefully.",
+        5
+      );
+    }
+
+    // Keep the illustrative score between 0 and 100.
     score = Math.min(score, 100);
 
-    const level =
+    const riskLevel =
       score >= 50 ? "High" :
-      score >= 20 ? "Medium" : "Low";
+      score >= 20 ? "Medium" :
+      "Low";
 
+    // Build the result safely using textContent.
     const heading = document.createElement("h3");
     heading.textContent = "URL Analysis Results";
 
     const scoreText = document.createElement("p");
     scoreText.textContent =
-      `Warning score: ${score}/100 | Heuristic level: ${level}`;
+      `Warning score: ${score}/100 | Heuristic level: ${riskLevel}`;
 
     const summary = document.createElement("p");
-    summary.textContent = warnings.length
-      ? `Detected ${warnings.length} potential warning sign(s):`
-      : "No warning signs covered by this tool were detected. This does not establish that the URL is safe.";
+
+    if (warnings.length === 0) {
+      summary.textContent =
+        "No warning signs covered by this tool were detected. This does not mean the URL is safe.";
+    } else {
+      summary.textContent =
+        `Found ${warnings.length} potential warning sign(s):`;
+    }
 
     const list = document.createElement("ul");
 
-    warnings.forEach(message => {
+    warnings.forEach(function (warning) {
       const item = document.createElement("li");
-      item.textContent = message;
+      item.textContent = warning;
       list.appendChild(item);
     });
 
     const note = document.createElement("p");
     note.textContent =
-      "This rule-based score is not a probability of maliciousness. " +
-      "Checks can produce false positives and miss threats. No live " +
-      "reputation, redirect, or website-content checks are performed.";
+      "Limitations: This rule-based score is not a probability that a URL is malicious. " +
+      "These checks can produce false positives and miss threats. " +
+      "No live reputation, redirect, or website-content checks are performed.";
 
-    results.append(heading, scoreText, summary, list, note);
+    const privacyTip = document.createElement("p");
+    privacyTip.textContent =
+      "Privacy tip: Never enter passwords or other personal information into a link to test it.";
+
+    results.append(
+      heading,
+      scoreText,
+      summary,
+      list,
+      note,
+      privacyTip
+    );
   });
 }
+
