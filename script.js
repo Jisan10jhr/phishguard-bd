@@ -3,8 +3,8 @@
  * PhishGuard BD
  * Educational URL analysis tool
  *
- * This tool checks for common warning signs.
- * It does not determine whether a website is safe.
+ * Scores are heuristic warning points, not probabilities.
+ * This tool cannot determine whether a website is safe.
  */
 
 const form = document.getElementById("url-form");
@@ -19,9 +19,24 @@ form.addEventListener("submit", function (event) {
 
   const heading = document.createElement("h3");
   const summary = document.createElement("p");
+  const scoreText = document.createElement("p");
   const list = document.createElement("ul");
+  const note = document.createElement("p");
 
-  results.append(heading, summary, list);
+  results.append(heading, summary, scoreText, list, note);
+
+  function showInvalid(message) {
+    heading.textContent = "Invalid URL format";
+    summary.textContent = message;
+    scoreText.remove();
+    list.remove();
+    note.remove();
+  }
+
+  if (!raw) {
+    showInvalid("Please enter a website URL to analyze.");
+    return;
+  }
 
   let url;
 
@@ -36,56 +51,92 @@ form.addEventListener("submit", function (event) {
       throw new Error("Unsupported protocol");
     }
 
-    if (!url.hostname.includes(".")) {
+    if (
+      !url.hostname ||
+      !url.hostname.includes(".") ||
+      /\s/.test(url.hostname)
+    ) {
       throw new Error("Invalid hostname");
     }
   } catch {
-    heading.textContent = "Invalid URL format";
-    summary.textContent =
-      "Enter a valid web address, such as https://example.com.";
+    showInvalid(
+      "Enter a valid web address, such as https://example.com."
+    );
     return;
   }
 
   const warnings = [];
+  let score = 0;
   const hostname = url.hostname.toLowerCase();
 
+  function addWarning(message, points) {
+    warnings.push(message);
+    score += points;
+  }
+
   if (url.protocol !== "https:") {
-    warnings.push(
-      "The URL uses HTTP instead of HTTPS. The connection may not be encrypted."
+    addWarning(
+      "Uses HTTP instead of HTTPS. The connection may not be encrypted.",
+      15
     );
   }
 
   if (url.username || url.password) {
-    warnings.push(
-      "The URL contains embedded user information. Check carefully which host it points to."
+    addWarning(
+      "Contains embedded user information before the hostname. Check which host the URL actually targets.",
+      25
     );
   }
 
-  if (/^(?:\d{1,3}\.){3}\d{1,3}$/.test(hostname)) {
-    warnings.push(
-      "The hostname resembles an IPv4 address instead of a conventional domain name."
+  const ipv4Pattern = /^(?:\d{1,3}\.){3}\d{1,3}$/;
+  const ipv4Parts = hostname.split(".").map(Number);
+  const isIPv4 =
+    ipv4Pattern.test(hostname) &&
+    ipv4Parts.every(part => part >= 0 && part <= 255);
+
+  if (isIPv4) {
+    addWarning(
+      "Uses an IPv4 address instead of a conventional domain name.",
+      20
     );
   }
 
   if (hostname.split(".").some(part => part.startsWith("xn--"))) {
-    warnings.push(
-      "The domain contains an encoded hostname label. Inspect it carefully for lookalike characters."
+    addWarning(
+      "Contains an encoded domain label. Check for lookalike characters.",
+      20
     );
   }
 
   if (hostname.split(".").length >= 5) {
-    warnings.push(
-      "The hostname has several subdomain levels. Verify the actual registered domain."
+    addWarning(
+      "Has several hostname levels. Check the actual domain carefully.",
+      10
     );
   }
 
   if (hostname.includes("-")) {
-    warnings.push(
-      "The hostname contains a hyphen. This is not malicious by itself, but deserves context."
+    addWarning(
+      "The hostname contains a hyphen. This is common on legitimate sites too, so context matters.",
+      5
     );
   }
 
+  // Keep the score within the range 0–100.
+  score = Math.min(score, 100);
+
+  let riskLevel;
+  if (score >= 50) {
+    riskLevel = "High";
+  } else if (score >= 20) {
+    riskLevel = "Medium";
+  } else {
+    riskLevel = "Low";
+  }
+
   heading.textContent = "URL Analysis Results";
+  scoreText.textContent =
+    `Warning score: ${score}/100 | Heuristic level: ${riskLevel}`;
 
   if (warnings.length === 0) {
     summary.textContent =
@@ -93,7 +144,7 @@ form.addEventListener("submit", function (event) {
       "This does not establish that the URL is safe.";
   } else {
     summary.textContent =
-      `Found ${warnings.length} potential warning sign(s):`;
+      `Detected ${warnings.length} potential warning sign(s):`;
   }
 
   warnings.forEach(function (warning) {
@@ -102,11 +153,14 @@ form.addEventListener("submit", function (event) {
     list.appendChild(item);
   });
 
-  const note = document.createElement("p");
   note.textContent =
-    "Limitations: These basic checks can produce false positives " +
-    "and miss malicious URLs. No live reputation or website-content " +
-    "checks are performed.";
+    "Limitations: This score is based only on simple URL patterns. " +
+    "It is not a probability of maliciousness. False positives and " +
+    "missed threats are possible. No live reputation, redirects, " +
+    "or website-content checks are performed. Do not enter passwords " +
+    "or personal information to test a link.";
+});
+
 
   results.appendChild(note);
 });
