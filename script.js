@@ -3,15 +3,15 @@
  * PhishGuard BD
  * Educational URL analysis tool
  *
- * This is a rule-based educational checker.
- * It is not a malware scanner or live reputation service.
+ * This tool uses simple rules to identify potential warning signs.
+ * Scores are illustrative, not probabilities of maliciousness.
+ * It does not perform live reputation or website-content checks.
  */
 
 const form = document.getElementById("url-form");
 const input = document.getElementById("url-input");
 const results = document.getElementById("results");
 
-// Confirm that the required HTML elements exist.
 if (!form || !input || !results) {
   console.error(
     "PhishGuard BD: Missing url-form, url-input, or results element. Check index.html."
@@ -30,7 +30,6 @@ if (!form || !input || !results) {
 
     let url;
 
-    // Add HTTPS if the user did not enter a protocol.
     try {
       const candidate = /^[a-z][a-z0-9+.-]*:\/\//i.test(raw)
         ? raw
@@ -57,10 +56,11 @@ if (!form || !input || !results) {
 
     const warnings = [];
     let score = 0;
+
     const hostname = url.hostname.toLowerCase();
     const parts = hostname.split(".");
+    const fullURL = `${url.hostname}${url.pathname}${url.search}`.toLowerCase();
 
-    // Record a warning and its illustrative points.
     function addWarning(message, points) {
       warnings.push(message);
       score += points;
@@ -74,15 +74,15 @@ if (!form || !input || !results) {
       );
     }
 
-    // 2. Embedded username or password.
+    // 2. Credentials embedded before the hostname.
     if (url.username || url.password) {
       addWarning(
-        "Contains embedded user information before the hostname. Verify the actual destination.",
+        "Contains user information before the hostname. This can disguise the destination; inspect the actual hostname carefully.",
         25
       );
     }
 
-    // 3. IPv4 address as the hostname.
+    // 3. IPv4 hostname.
     const isIPv4 =
       /^(?:\d{1,3}\.){3}\d{1,3}$/.test(hostname) &&
       hostname.split(".").every(
@@ -99,12 +99,12 @@ if (!form || !input || !results) {
     // 4. Encoded hostname labels.
     if (parts.some(part => part.startsWith("xn--"))) {
       addWarning(
-        "Contains an encoded domain label. Check carefully for lookalike characters.",
+        "Contains an encoded domain label. Check for lookalike characters.",
         20
       );
     }
 
-    // 5. Multiple hostname levels.
+    // 5. Many hostname levels.
     if (parts.length >= 5) {
       addWarning(
         "Has several hostname levels. Verify the actual registered domain.",
@@ -112,7 +112,7 @@ if (!form || !input || !results) {
       );
     }
 
-    // 6. Hyphens can be worth checking, but are not proof of fraud.
+    // 6. Hyphens are contextual clues, not proof of maliciousness.
     if (hostname.includes("-")) {
       addWarning(
         "The hostname contains a hyphen. This is not malicious by itself.",
@@ -123,12 +123,82 @@ if (!form || !input || !results) {
     // 7. Unusually long URL.
     if (raw.length > 100) {
       addWarning(
-        "The URL is unusually long. Long URLs are not necessarily malicious, so inspect the destination carefully.",
+        "The URL is unusually long. Inspect the destination and parameters carefully.",
         5
       );
     }
 
-    // Limit the illustrative score to 100.
+    // 8. @ symbol in the raw URL can make the destination confusing.
+    if (raw.includes("@")) {
+      addWarning(
+        "Contains an @ symbol. In a URL, text before @ may be interpreted as user information, while the hostname comes after it.",
+        15
+      );
+    }
+
+    // 9. Suspicious terms in the hostname.
+    // These terms can occur on legitimate websites too.
+    const suspiciousTerms = [
+      "login",
+      "verify",
+      "secure",
+      "account",
+      "signin",
+      "update",
+      "password",
+      "wallet"
+    ];
+
+    const matchedTerms = suspiciousTerms.filter(term =>
+      hostname.split(/[.-]/).includes(term)
+    );
+
+    if (matchedTerms.length > 0) {
+      addWarning(
+        `The hostname contains login or account-related term(s): ${matchedTerms.join(", ")}. These words are not proof of phishing; verify the domain owner.`,
+        10
+      );
+    }
+
+    // 10. Brand-name clues in unfamiliar hostnames.
+    // This checks a small list and may miss attacks or flag legitimate sites.
+    const brandNames = [
+      "paypal",
+      "google",
+      "microsoft",
+      "apple",
+      "facebook",
+      "instagram",
+      "amazon",
+      "netflix",
+      "binance"
+    ];
+
+    const hostnameLabels = hostname.split(/[.-]/);
+    const brandMatches = brandNames.filter(brand =>
+      hostnameLabels.includes(brand)
+    );
+
+    const isExactBrandDomain = brandMatches.some(brand =>
+      hostname === `${brand}.com` ||
+      hostname.endsWith(`.${brand}.com`)
+    );
+
+    if (brandMatches.length > 0 && !isExactBrandDomain) {
+      addWarning(
+        `Contains a familiar brand name (${brandMatches.join(", ")}) in a hostname that this simple checker cannot verify as official. Visit the brand's known official website instead.`,
+        15
+      );
+    }
+
+    // 11. Encoded characters in the URL path or query.
+    if (/%[0-9a-f]{2}/i.test(fullURL)) {
+      addWarning(
+        "Contains percent-encoded characters. This is common on legitimate websites too, but inspect unfamiliar links carefully.",
+        5
+      );
+    }
+
     score = Math.min(score, 100);
 
     const riskLevel =
@@ -136,11 +206,11 @@ if (!form || !input || !results) {
       score >= 20 ? "Medium" :
       "Low";
 
-    // Build results using safe DOM methods.
+    // Results heading.
     const heading = document.createElement("h3");
     heading.textContent = "URL Analysis Results";
 
-    // Color-coded risk badge.
+    // Colored risk badge.
     const riskBadge = document.createElement("span");
     riskBadge.classList.add("risk-badge");
 
@@ -154,11 +224,11 @@ if (!form || !input || !results) {
 
     riskBadge.textContent = `Heuristic level: ${riskLevel}`;
 
-    // Display the score separately.
+    // Score display.
     const scoreText = document.createElement("p");
     scoreText.textContent = `Warning score: ${score}/100`;
 
-    // Summarize the analysis.
+    // Warning summary.
     const summary = document.createElement("p");
 
     if (warnings.length === 0) {
@@ -169,7 +239,7 @@ if (!form || !input || !results) {
         `Detected ${warnings.length} potential warning sign(s):`;
     }
 
-    // List each detected warning.
+    // Warning list.
     const list = document.createElement("ul");
 
     warnings.forEach(function (warning) {
@@ -178,33 +248,32 @@ if (!form || !input || !results) {
       list.appendChild(item);
     });
 
-    // Practical advice based on the heuristic level.
+    // Practical advice.
     const advice = document.createElement("p");
     advice.classList.add("result-advice");
 
     if (riskLevel === "High") {
       advice.textContent =
-        "Safety advice: Several warning signs were detected. Avoid opening this link until you independently verify its destination.";
+        "Safety advice: Multiple warning signs were detected. Do not enter passwords or payment information. Verify the destination using an independently obtained official website or contact method.";
     } else if (riskLevel === "Medium") {
       advice.textContent =
         "Safety advice: Review the warning signs carefully. Verify the domain through an official source before entering information.";
     } else {
       advice.textContent =
-        "Safety advice: Few warning signs were detected by this tool, but that does not mean the website is trustworthy. Verify the sender and destination.";
+        "Safety advice: Few warning signs were detected by this tool, but the website may still be malicious. Verify the sender and destination independently.";
     }
 
-    // Explain the limitations.
+    // Limitations.
     const note = document.createElement("p");
     note.classList.add("result-limitations");
     note.textContent =
-      "Limitations: This rule-based score is not a probability that a URL is malicious. Checks can produce false positives and miss threats. No live reputation, redirect, or website-content checks are performed.";
+      "Limitations: This rule-based score is not a probability that a URL is malicious. Legitimate URLs may trigger warnings, and malicious URLs may go undetected. No live reputation, redirect, or website-content checks are performed.";
 
     // Privacy reminder.
     const privacyTip = document.createElement("p");
     privacyTip.textContent =
       "Privacy tip: Never enter passwords or other personal information into a link to test it.";
 
-    // Display all results in the correct order.
     results.append(
       heading,
       riskBadge,
