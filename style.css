@@ -1072,14 +1072,14 @@ input:focus-visible {
   #results h3 {
     font-size: 1.15rem;
   }
-}
-/* PhishGuard BD creator credit */
+
+/* PhishGuard BD creator footer */
 .creator-footer {
   margin-top: 40px;
   padding: 24px 16px;
   text-align: center;
-  border-top: 1px solid #dbe3ee;
-  color: #64748b;
+  border-top: 1px solid #334155;
+  color: #CBD5E1;
   font-size: 14px;
   line-height: 1.7;
 }
@@ -1089,15 +1089,17 @@ input:focus-visible {
 }
 
 .creator-footer strong {
-  color: #1e293b;
+  color: #F8FAFC;
+  font-weight: 700;
 }
 
 .creator-footer a {
-  color: #2563eb;
+  color: #60A5FA;
   text-decoration: none;
   font-weight: 600;
 }
 
 .creator-footer a:hover {
+  color: #93C5FD;
   text-decoration: underline;
 }
