@@ -1,0 +1,245 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta
+    name="description"
+    content="Learn about PhishGuard BD, its creator, mission, and cybersecurity awareness goals."
+  >
+  <title>About | PhishGuard BD</title>
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    .about-page {
+      width: min(100% - 40px, 1000px);
+      margin: 0 auto;
+      padding: 64px 0 80px;
+      color: #CBD5E1;
+    }
+
+    .about-hero {
+      text-align: center;
+      padding: 40px 0 52px;
+    }
+
+    .about-label {
+      color: #00E6A0;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .about-hero h1 {
+      color: #F8FAFC;
+      font-size: clamp(2.2rem, 5vw, 3.6rem);
+      line-height: 1.15;
+      margin: 16px 0;
+    }
+
+    .about-hero p {
+      max-width: 680px;
+      margin: 0 auto;
+      line-height: 1.8;
+      color: #AAB8C8;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px;
+    }
+
+    .about-card {
+      padding: 28px;
+      border: 1px solid #263746;
+      border-radius: 16px;
+      background: #111D29;
+    }
+
+    .about-card h2 {
+      margin-top: 0;
+      margin-bottom: 14px;
+      color: #F8FAFC;
+      font-size: 1.4rem;
+    }
+
+    .about-card p {
+      margin-bottom: 0;
+      line-height: 1.8;
+      color: #CBD5E1;
+    }
+
+    .creator-name {
+      color: #00E6A0;
+      font-size: 1.35rem;
+      font-weight: 700;
+    }
+
+    .about-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .about-link {
+      display: inline-block;
+      padding: 11px 16px;
+      border: 1px solid #00B889;
+      border-radius: 8px;
+      color: #00E6A0;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .about-link:hover {
+      background: #00E6A0;
+      color: #08121B;
+    }
+
+    .about-note {
+      margin-top: 24px;
+      padding: 18px 20px;
+      border-left: 3px solid #00E6A0;
+      border-radius: 6px;
+      background: #10232B;
+      line-height: 1.8;
+      color: #CBD5E1;
+    }
+
+    .about-footer {
+      margin-top: 56px;
+      padding-top: 24px;
+      border-top: 1px solid #334155;
+      text-align: center;
+      color: #CBD5E1;
+      font-size: 0.9rem;
+      line-height: 1.8;
+    }
+
+    .about-footer a {
+      color: #60A5FA;
+      text-decoration: none;
+    }
+
+    .about-footer a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 650px) {
+      .about-page {
+        width: min(100% - 28px, 1000px);
+        padding-top: 36px;
+      }
+
+      .about-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .about-card {
+        padding: 22px;
+      }
+
+      .about-hero {
+        padding: 24px 0 36px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="about-page">
+    <section class="about-hero">
+      <div class="about-label">About the project</div>
+      <h1>Building a safer digital Bangladesh.</h1>
+      <p>
+        PhishGuard BD is an independent cybersecurity learning project
+        designed to help people recognize suspicious URL patterns and
+        become more aware of phishing risks.
+      </p>
+    </section>
+
+    <section class="about-grid" aria-label="About PhishGuard BD">
+      <article class="about-card">
+        <h2>Why PhishGuard BD?</h2>
+        <p>
+          Suspicious links can trick people into visiting deceptive
+          websites or sharing sensitive information. This project
+          highlights common URL warning signs and provides educational
+          safety advice to encourage more careful browsing.
+        </p>
+      </article>
+
+      <article class="about-card">
+        <h2>Meet the creator</h2>
+        <p class="creator-name">MD Jisan Hossain Rimon</p>
+        <p>
+          I'm learning web development and cybersecurity by building
+          practical projects. I created PhishGuard BD to develop my
+          technical skills and make online safety concepts easier
+          for people to understand.
+        </p>
+        <div class="about-links">
+          <a
+            class="about-link"
+            href="https://github.com/Jisan10jhr"
+            target="_blank"
+            rel="noopener noreferrer"
+          >GitHub Profile</a>
+
+          <!-- Add your LinkedIn profile URL here when ready. -->
+          <a
+            class="about-link"
+            href="https://www.linkedin.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >LinkedIn</a>
+        </div>
+      </article>
+
+      <article class="about-card">
+        <h2>How it works</h2>
+        <p>
+          The current checker evaluates submitted URLs against a set
+          of common warning patterns and presents a heuristic score
+          with safety guidance. It does not perform live threat
+          intelligence, redirect, or website-content checks.
+        </p>
+      </article>
+
+      <article class="about-card">
+        <h2>Feedback and support</h2>
+        <p>
+          Found a bug or have an idea for improvement? Visit the
+          project repository to review the code and share feedback
+          through GitHub issues, if enabled.
+        </p>
+        <div class="about-links">
+          <a
+            class="about-link"
+            href="https://github.com/Jisan10jhr/phishguard-bd"
+            target="_blank"
+            rel="noopener noreferrer"
+          >Project Repository</a>
+        </div>
+      </article>
+    </section>
+
+    <div class="about-note">
+      <strong>Important:</strong> PhishGuard BD is an educational tool.
+      A low warning score does not guarantee that a URL is safe, and a
+      high score does not prove that it is malicious.
+    </div>
+
+    <footer class="about-footer">
+      <p>Created by <strong>MD Jisan Hossain Rimon</strong></p>
+      <p>PhishGuard BD — Learn to recognize suspicious links.</p>
+      <p><a href="index.html">Return to the home page</a></p>
+    </footer>
+  </main>
+</body>
+</html>
