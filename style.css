@@ -1073,3 +1073,31 @@ input:focus-visible {
     font-size: 1.15rem;
   }
 }
+/* PhishGuard BD creator credit */
+.creator-footer {
+  margin-top: 40px;
+  padding: 24px 16px;
+  text-align: center;
+  border-top: 1px solid #dbe3ee;
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.creator-footer p {
+  margin: 6px 0;
+}
+
+.creator-footer strong {
+  color: #1e293b;
+}
+
+.creator-footer a {
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.creator-footer a:hover {
+  text-decoration: underline;
+}
