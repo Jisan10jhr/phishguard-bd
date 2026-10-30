@@ -1103,3 +1103,22 @@ input:focus-visible {
   color: #93C5FD;
   text-decoration: underline;
 }
+/* Fix creator footer alignment on desktop and mobile */
+.creator-footer {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  text-align: center !important;
+  padding: 24px 20px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.creator-footer p {
+  width: 100%;
+  text-align: center !important;
+  margin: 6px 0;
+}
