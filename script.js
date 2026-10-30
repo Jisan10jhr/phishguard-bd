@@ -160,36 +160,50 @@ if (!form || !input || !results) {
       );
     }
 
-    // 10. Brand-name clues in unfamiliar hostnames.
-    // This checks a small list and may miss attacks or flag legitimate sites.
-    const brandNames = [
-      "paypal",
-      "google",
-      "microsoft",
-      "apple",
-      "facebook",
-      "instagram",
-      "amazon",
-      "netflix",
-      "binance"
-    ];
+   
+    // 10. Brand-name clues and misleading subdomains.
+    // This is a heuristic check, not proof of impersonation.
 
-    const hostnameLabels = hostname.split(/[.-]/);
-    const brandMatches = brandNames.filter(brand =>
-      hostnameLabels.includes(brand)
-    );
+    const brandDomains = {
+      paypal: ["paypal.com"],
+      google: ["google.com"],
+      microsoft: ["microsoft.com", "live.com"],
+      apple: ["apple.com"],
+      facebook: ["facebook.com"],
+      instagram: ["instagram.com"],
+      amazon: ["amazon.com"],
+      netflix: ["netflix.com"],
+      binance: ["binance.com"]
+    };
 
-    const isExactBrandDomain = brandMatches.some(brand =>
-      hostname === `${brand}.com` ||
-      hostname.endsWith(`.${brand}.com`)
-    );
+    const hostnameLabels = hostname.split(".");
+    const detectedBrands = [];
 
-    if (brandMatches.length > 0 && !isExactBrandDomain) {
+    for (const [brand, officialDomains] of Object.entries(brandDomains)) {
+      const containsBrand = hostnameLabels.some(label =>
+        label === brand || label.includes(brand)
+      );
+
+      if (!containsBrand) {
+        continue;
+      }
+
+      const isKnownDomain = officialDomains.some(domain =>
+        hostname === domain || hostname.endsWith(`.${domain}`)
+      );
+
+      if (!isKnownDomain) {
+        detectedBrands.push(brand);
+      }
+    }
+
+    if (detectedBrands.length > 0) {
       addWarning(
-        `Contains a familiar brand name (${brandMatches.join(", ")}) in a hostname that this simple checker cannot verify as official. Visit the brand's known official website instead.`,
-        15
+        `The hostname contains a familiar brand name (${detectedBrands.join(", ")}) but does not match the limited list of recognized official domains. It may be impersonating a brand. Verify the exact domain using the brand's official website.`,
+        20
       );
     }
+
 
     // 11. Encoded characters in the URL path or query.
     if (/%[0-9a-f]{2}/i.test(fullURL)) {
