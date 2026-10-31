@@ -60,6 +60,7 @@ if (
       return;
     }
 
+   
     const warnings = [];
     let score = 0;
 
@@ -67,10 +68,23 @@ if (
     const parts = hostname.split(".");
     const fullURL = `${url.hostname}${url.pathname}${url.search}`.toLowerCase();
 
-    function addWarning(message, points) {
-      warnings.push(message);
+    // Store warnings as structured information.
+    function addWarning(
+      message,
+      points,
+      explanation = "This pattern may deserve attention, but it does not prove that a URL is malicious.",
+      action = "Verify the destination independently before sharing personal or sensitive information."
+    ) {
+      warnings.push({
+        message: message,
+        points: points,
+        explanation: explanation,
+        action: action
+      });
+
       score += points;
     }
+
 
     // 1. HTTP instead of HTTPS.
     if (url.protocol !== "https:") {
@@ -294,14 +308,14 @@ if (
         `Detected ${warnings.length} potential warning sign(s):`;
     }
 
-    // Warning list.
-    const list = document.createElement("ul");
+  // Warning list.
+const list = document.createElement("ul");
 
-    warnings.forEach(function (warning) {
-      const item = document.createElement("li");
-      item.textContent = warning;
-      list.appendChild(item);
-    });
+warnings.forEach(function (warning) {
+  const item = document.createElement("li");
+  item.textContent = warning.message;
+  list.appendChild(item);
+});
 
     // Practical advice.
     const advice = document.createElement("p");
