@@ -113,10 +113,40 @@
         expectedValid: false
       },
       {
-        name: "Credentials in URL",
-        url: "https://trusted-name@example.com/login",
-        expectedScore: 25
-      }
+  name: "Credentials in URL",
+  url: "https://trusted-name@example.com/login",
+  expectedScore: 25
+},
+{
+  name: "Empty URL input",
+  url: "",
+  expectedValid: false
+},
+{
+  name: "Malformed hostname",
+  url: "https://exa mple.com",
+  expectedValid: false
+},
+{
+  name: "Very long URL",
+  url: "https://example.com/" + "a".repeat(101),
+  expectedScore: 5
+},
+{
+  name: "Suspicious hostname keyword",
+  url: "https://login.example.com",
+  expectedScore: 10
+},
+{
+  name: "Brand impersonation",
+  url: "https://paypal-login.example.com",
+  expectedScore: 35
+},
+{
+  name: "Multiple warning signs",
+  url: "http://paypal-login.example.com",
+  expectedScore: 50
+}
     ];
 
     document.getElementById("run-tests").addEventListener("click", function () {
