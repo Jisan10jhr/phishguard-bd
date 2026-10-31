@@ -121,6 +121,32 @@
       </form>
 
       <div id="results" class="results" aria-live="polite"></div>
+      <!-- URL Analysis History -->
+<section class="history-panel" id="history">
+  <div class="history-heading">
+    <div>
+      <p class="eyebrow">YOUR RECENT CHECKS</p>
+      <h3>Analysis History</h3>
+    </div>
+
+    <button
+      type="button"
+      id="clear-history"
+      class="button button-secondary"
+    >
+      Clear History
+    </button>
+  </div>
+
+  <p class="history-note">
+    Your latest 20 URL analyses are saved in this browser.
+    Avoid analyzing URLs containing private information.
+  </p>
+
+  <div id="history-list" aria-live="polite">
+    <p class="history-empty">No analysis history yet.</p>
+  </div>
+</section>
       <p class="scanner-note">
         Privacy tip: never enter passwords or other personal information into a link to test it.
       </p>
