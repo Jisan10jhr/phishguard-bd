@@ -204,8 +204,36 @@ if (!form || !input || !results) {
       );
     }
 
+    // 11. URL shortener detection.
+    // Shortened links hide their final destination.
+    // This does not mean the link is malicious.
 
-    // 11. Encoded characters in the URL path or query.
+    const shortenerDomains = [
+      "bit.ly",
+      "tinyurl.com",
+      "t.co",
+      "is.gd",
+      "ow.ly",
+      "buff.ly",
+      "rebrand.ly",
+      "shorturl.at",
+      "cutt.ly",
+      "rb.gy"
+    ];
+
+    const isShortenedURL = shortenerDomains.some(domain =>
+      hostname === domain || hostname.endsWith(`.${domain}`)
+    );
+
+    if (isShortenedURL) {
+      addWarning(
+        "Uses a URL shortening service. Shortened links hide their final destination. Check the destination through a trusted link-expansion service or an independently obtained official website before visiting.",
+        15
+      );
+    }
+
+
+    // 12. Encoded characters in the URL path or query.
     if (/%[0-9a-f]{2}/i.test(fullURL)) {
       addWarning(
         "Contains percent-encoded characters. This is common on legitimate websites too, but inspect unfamiliar links carefully.",
