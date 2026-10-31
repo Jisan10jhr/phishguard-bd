@@ -97,12 +97,14 @@ if (url.protocol !== "https:") {
 }
 
     // 2. Credentials embedded before the hostname.
-    if (url.username || url.password) {
-      addWarning(
-        "Contains user information before the hostname. This can disguise the destination; inspect the actual hostname carefully.",
-        25
-      );
-    }
+if (url.username || url.password) {
+  addWarning(
+    "Contains user information before the hostname. This can disguise the destination; inspect the actual hostname carefully.",
+    25,
+    "URLs can contain user information before the @ symbol, while the actual hostname appears after it. Attackers may exploit this format to make a link look as though it belongs to a familiar website when it leads somewhere else.",
+    "Identify the actual hostname after the @ symbol. Do not trust familiar-looking words before it. If the destination is unfamiliar, avoid the link and visit the organization's official website directly."
+  );
+}
 
    
    // 3. IPv4 and IPv6 hostname detection.
