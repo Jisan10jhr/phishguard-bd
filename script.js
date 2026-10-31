@@ -11,7 +11,110 @@
 const form = document.getElementById("url-form");
 const input = document.getElementById("url-input");
 const results = document.getElementById("results");
+// ========================================
+// URL Analysis History
+// ========================================
 
+const historyList = document.getElementById("history-list");
+const clearHistoryButton = document.getElementById("clear-history");
+
+const HISTORY_KEY = "phishguard-history";
+const HISTORY_LIMIT = 20;
+
+// Load saved history from this browser.
+function getHistory() {
+  try {
+    const saved = localStorage.getItem(HISTORY_KEY);
+    const history = saved ? JSON.parse(saved) : [];
+
+    return Array.isArray(history) ? history : [];
+  } catch (error) {
+    console.error("Could not load analysis history:", error);
+    return [];
+  }
+}
+
+// Display saved history.
+function renderHistory() {
+  if (!historyList) return;
+
+  historyList.replaceChildren();
+
+  const history = getHistory();
+
+  if (history.length === 0) {
+    const emptyMessage = document.createElement("p");
+    emptyMessage.classList.add("history-empty");
+    emptyMessage.textContent = "No analysis history yet.";
+    historyList.appendChild(emptyMessage);
+    return;
+  }
+
+  history.forEach(function (entry) {
+    const item = document.createElement("article");
+    item.classList.add("history-item");
+
+    const urlText = document.createElement("p");
+    urlText.textContent = entry.url;
+
+    const levelText = document.createElement("p");
+    levelText.textContent =
+      `Risk level: ${entry.riskLevel} | Score: ${entry.score}/100`;
+
+    const dateText = document.createElement("p");
+    dateText.textContent = new Date(entry.date).toLocaleString();
+
+    item.append(urlText, levelText, dateText);
+    historyList.appendChild(item);
+  });
+}
+
+// Save a successful URL analysis.
+function saveHistory(raw, analysis) {
+  try {
+    const candidate = /^[a-z][a-z0-9+.-]*:\/\//i.test(raw)
+      ? raw
+      : `https://${raw}`;
+
+    const parsedURL = new URL(candidate);
+
+    // Exclude query parameters and fragments for privacy.
+    const savedURL = parsedURL.origin + parsedURL.pathname;
+
+    const history = getHistory();
+
+    history.unshift({
+      url: savedURL,
+      riskLevel: analysis.riskLevel,
+      score: analysis.score,
+      date: new Date().toISOString()
+    });
+
+    localStorage.setItem(
+      HISTORY_KEY,
+      JSON.stringify(history.slice(0, HISTORY_LIMIT))
+    );
+
+    renderHistory();
+  } catch (error) {
+    console.error("Could not save analysis history:", error);
+  }
+}
+
+// Clear saved history.
+if (clearHistoryButton) {
+  clearHistoryButton.addEventListener("click", function () {
+    try {
+      localStorage.removeItem(HISTORY_KEY);
+      renderHistory();
+    } catch (error) {
+      console.error("Could not clear analysis history:", error);
+    }
+  });
+}
+
+// Display history when the page opens.
+renderHistory();
 if (!form || !input || !results) {
   console.error(
     "PhishGuard BD: Missing url-form, url-input, or results element. Check index.html."
@@ -30,7 +133,7 @@ if (!analysis.valid) {
   results.textContent = analysis.error;
   return;
 }
-
+saveHistory(raw, analysis);
 const warnings = analysis.warnings;
 const score = analysis.score;
 const riskLevel = analysis.riskLevel;
