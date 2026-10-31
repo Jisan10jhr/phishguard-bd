@@ -161,17 +161,7 @@ if (raw.length > 100) {
   );
 }
 
-   // 8. Detect @ in the URL authority section.
-const hasAtInAuthority = url.host !== url.hostname;
-
-if (hasAtInAuthority) {
-  addWarning(
-    "Contains user information before the hostname. Inspect the actual destination carefully.",
-    25,
-    "An @ symbol in the URL authority section can separate user information from the actual hostname. Deceptive links may place familiar-looking text before @ to disguise the real destination.",
-    "Identify the actual hostname shown after the @ symbol. Do not trust familiar-looking text before it. If the destination is unfamiliar, visit the organization's official website directly."
-  );
-}
+   
 
     // 9. Suspicious terms in the hostname.
     // These terms can occur on legitimate websites too.
