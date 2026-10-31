@@ -105,24 +105,26 @@ if (url.protocol !== "https:") {
     }
 
    
-    // 3. IPv4 and IPv6 hostname detection.
+   // 3. IPv4 and IPv6 hostname detection.
 
-    const isIPv4 =
-      /^(?:\d{1,3}\.){3}\d{1,3}$/.test(hostname) &&
-      hostname.split(".").every(
-        part => Number(part) >= 0 && Number(part) <= 255
-      );
+const isIPv4 =
+  /^(?:\d{1,3}\.){3}\d{1,3}$/.test(hostname) &&
+  hostname.split(".").every(
+    part => Number(part) >= 0 && Number(part) <= 255
+  );
 
-    // URL.hostname returns IPv6 addresses inside square brackets.
-    // The URL parser validates the IPv6 address syntax.
-    const isIPv6 = hostname.startsWith("[") && hostname.endsWith("]");
+// URL.hostname returns IPv6 addresses inside square brackets.
+// The URL parser validates the IPv6 address syntax.
+const isIPv6 = hostname.startsWith("[") && hostname.endsWith("]");
 
-    if (isIPv4 || isIPv6) {
-      addWarning(
-        `Uses an ${isIPv4 ? "IPv4" : "IPv6"} address instead of a conventional domain name. Verify the destination carefully.`,
-        20
-      );
-    }
+if (isIPv4 || isIPv6) {
+  addWarning(
+    `Uses an ${isIPv4 ? "IPv4" : "IPv6"} address instead of a conventional domain name. Verify the destination carefully.`,
+    20,
+    "Websites normally use domain names that help visitors recognize their destinations. An IP address in a URL is not automatically malicious, but it can make the website's operator and identity less obvious.",
+    "Verify the IP address through an independent, trusted source before visiting or entering information. Avoid assuming that an IP-based URL belongs to a familiar organization."
+  );
+}
 
 
     // 4. Encoded hostname labels.
