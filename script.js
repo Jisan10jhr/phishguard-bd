@@ -155,13 +155,15 @@ if (hostname.includes("-")) {
   );
 }
 
-    // 7. Unusually long URL.
-    if (raw.length > 100) {
-      addWarning(
-        "The URL is unusually long. Inspect the destination and parameters carefully.",
-        5
-      );
-    }
+   // 7. Unusually long URL.
+if (raw.length > 100) {
+  addWarning(
+    "The URL is unusually long. Inspect the destination and parameters carefully.",
+    5,
+    "Long URLs can contain many parameters, redirects, or encoded information. Some legitimate websites also use long URLs, but excessive length can make it harder to recognize the actual destination and notice suspicious details.",
+    "Check the hostname carefully and look for unexpected redirects or unfamiliar parameters. If the link claims to belong to a familiar organization, visit its official website directly."
+  );
+}
 
     // 8. @ symbol in the raw URL can make the destination confusing.
     if (raw.includes("@")) {
