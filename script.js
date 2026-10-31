@@ -140,12 +140,14 @@ if (
     }
 
     // 6. Hyphens are contextual clues, not proof of maliciousness.
-    if (hostname.includes("-")) {
-      addWarning(
-        "The hostname contains a hyphen. This is not malicious by itself.",
-        5
-      );
-    }
+if (hostname.includes("-")) {
+  addWarning(
+    "The hostname contains a hyphen. This is not malicious by itself.",
+    5,
+    "Hyphens are common in legitimate websites. However, deceptive domains may use hyphens to imitate familiar brands or make misleading names.",
+    "Check the complete domain carefully, including its spelling and the domain ending, before entering personal information."
+  );
+}
 
     // 7. Unusually long URL.
     if (raw.length > 100) {
