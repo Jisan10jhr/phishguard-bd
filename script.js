@@ -308,12 +308,25 @@ if (
         `Detected ${warnings.length} potential warning sign(s):`;
     }
 
-  // Warning list.
+  // Detailed warning report.
 const list = document.createElement("ul");
 
 warnings.forEach(function (warning) {
   const item = document.createElement("li");
-  item.textContent = warning.message;
+
+  const message = document.createElement("strong");
+  message.textContent = warning.message;
+
+  const points = document.createElement("p");
+  points.textContent = `Illustrative points: ${warning.points}`;
+
+  const explanation = document.createElement("p");
+  explanation.textContent = `Why it matters: ${warning.explanation}`;
+
+  const action = document.createElement("p");
+  action.textContent = `Recommended action: ${warning.action}`;
+
+  item.append(message, points, explanation, action);
   list.appendChild(item);
 });
 
