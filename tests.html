@@ -1,1 +1,142 @@
 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PhishGuard BD - Automated Tests</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111923;
+      color: #eaf2f7;
+      padding: 30px;
+      max-width: 850px;
+      margin: auto;
+    }
+
+    h1 {
+      color: #00f5a0;
+    }
+
+    button {
+      background: #00f5a0;
+      color: #111923;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .test {
+      padding: 14px;
+      margin: 12px 0;
+      background: #1b2938;
+      border-radius: 8px;
+    }
+
+    .pass {
+      color: #00f5a0;
+    }
+
+    .fail {
+      color: #ff6b6b;
+    }
+
+    #summary {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>PhishGuard BD</h1>
+  <h2>Automated URL Detection Tests</h2>
+
+  <p>This page will test the URL detection rules.</p>
+
+  <button id="run-tests">Run Tests</button>
+
+  <div id="test-results"></div>
+  <div id="summary"></div>
+
+  <script>
+    const testCases = [
+      {
+        name: "Normal HTTPS domain",
+        url: "https://example.com",
+        expectedScore: 0
+      },
+      {
+        name: "HTTP website",
+        url: "http://example.com",
+        expectedScore: 15
+      },
+      {
+        name: "URL shortener",
+        url: "https://bit.ly/example",
+        expectedScore: 15
+      },
+      {
+        name: "IPv4 address",
+        url: "https://192.168.1.10",
+        expectedScore: 20
+      },
+      {
+        name: "IPv6 address",
+        url: "https://[2001:db8::1]",
+        expectedScore: 20
+      },
+      {
+        name: "Punycode domain",
+        url: "https://xn--pple-43d.com",
+        expectedScore: 25
+      },
+      {
+        name: "Custom port",
+        url: "https://example.com:8080",
+        expectedScore: 0
+      },
+      {
+        name: "Encoded URL",
+        url: "https://example.com/?next=%2Flogin",
+        expectedScore: 5
+      }
+    ];
+
+    document.getElementById("run-tests").addEventListener("click", function () {
+      const results = document.getElementById("test-results");
+      const summary = document.getElementById("summary");
+
+      results.replaceChildren();
+
+      let passed = 0;
+      let failed = 0;
+
+      testCases.forEach(function (test) {
+        const result = document.createElement("div");
+        result.classList.add("test");
+
+        const title = document.createElement("strong");
+        title.textContent = test.name;
+
+        const detail = document.createElement("p");
+        detail.textContent = "Expected score: " + test.expectedScore;
+
+        result.append(title, detail);
+
+        results.appendChild(result);
+      });
+
+      summary.textContent =
+        "Test cases loaded: " + testCases.length +
+        ". Analysis connection will be added next.";
+
+    });
+  </script>
+
+</body>
+</html>
