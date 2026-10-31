@@ -82,19 +82,26 @@ if (!form || !input || !results) {
       );
     }
 
-    // 3. IPv4 hostname.
+   
+    // 3. IPv4 and IPv6 hostname detection.
+
     const isIPv4 =
       /^(?:\d{1,3}\.){3}\d{1,3}$/.test(hostname) &&
       hostname.split(".").every(
         part => Number(part) >= 0 && Number(part) <= 255
       );
 
-    if (isIPv4) {
+    // URL.hostname returns IPv6 addresses inside square brackets.
+    // The URL parser validates the IPv6 address syntax.
+    const isIPv6 = hostname.startsWith("[") && hostname.endsWith("]");
+
+    if (isIPv4 || isIPv6) {
       addWarning(
-        "Uses an IPv4 address instead of a conventional domain name.",
+        `Uses an ${isIPv4 ? "IPv4" : "IPv6"} address instead of a conventional domain name. Verify the destination carefully.`,
         20
       );
     }
+
 
     // 4. Encoded hostname labels.
     if (parts.some(part => part.startsWith("xn--"))) {
