@@ -1275,3 +1275,16 @@ input:focus-visible {
     padding: 22px;
   }
 }
+/* PhishGuard BD watermark */
+body::after {
+  content: "Created by MD JISAN HOSSAN RIMON";
+  position: fixed;
+  bottom: 12px;
+  right: 16px;
+  color: var(--muted);
+  opacity: 0.35;
+  font-size: 11px;
+  letter-spacing: 1px;
+  pointer-events: none;
+  z-index: 999;
+}
