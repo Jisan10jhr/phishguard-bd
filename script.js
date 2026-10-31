@@ -183,11 +183,13 @@ if (hostname.includes("-")) {
     );
 
     if (matchedTerms.length > 0) {
-      addWarning(
-        `The hostname contains login or account-related term(s): ${matchedTerms.join(", ")}. These words are not proof of phishing; verify the domain owner.`,
-        10
-      );
-    }
+  addWarning(
+    `The hostname contains login or account-related term(s): ${matchedTerms.join(", ")}. These words are not proof of phishing; verify the domain owner.`,
+    10,
+    "Words such as secure, login, verify, and account can appear on legitimate websites. However, scammers may use them to make deceptive links look trustworthy or encourage users to sign in.",
+    "Do not sign in through an unfamiliar link. Visit the organization's official website directly and check whether the domain is genuine."
+  );
+}
 
    
     // 10. Brand-name clues and misleading subdomains.
