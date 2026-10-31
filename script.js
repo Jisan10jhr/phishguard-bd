@@ -128,12 +128,14 @@ if (isIPv4 || isIPv6) {
 
 
     // 4. Encoded hostname labels.
-    if (parts.some(part => part.startsWith("xn--"))) {
-      addWarning(
-        "Contains an encoded domain label. Check for lookalike characters.",
-        20
-      );
-    }
+if (parts.some(part => part.startsWith("xn--"))) {
+  addWarning(
+    "Contains an encoded domain label. Check for lookalike characters.",
+    20,
+    "Internationalized domain names can use Punycode labels beginning with xn-- to represent non-English characters. Some attackers may use visually similar characters from different writing systems to imitate familiar domain names.",
+    "Check the domain carefully in your browser's address bar. If it claims to belong to a familiar organization, visit that organization's official website directly instead of following the unfamiliar link."
+  );
+}
 
     // 5. Many hostname levels.
     if (parts.length >= 5) {
