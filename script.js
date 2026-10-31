@@ -221,26 +221,26 @@ if (hasAtInAuthority) {
       binance: ["binance.com"]
     };
 
-    const hostnameLabels = hostname.split(".");
-    const detectedBrands = [];
+   const hostnameLabels = hostname.split(".");
+const detectedBrands = [];
 
-    for (const [brand, officialDomains] of Object.entries(brandDomains)) {
-      const containsBrand = hostnameLabels.some(label =>
-        label === brand || label.includes(brand)
-      );
+for (const [brand, officialDomains] of Object.entries(brandDomains)) {
+  const containsBrand = hostnameLabels.some(label =>
+    label === brand || label.split("-").includes(brand)
+  );
 
-      if (!containsBrand) {
-        continue;
-      }
+  if (!containsBrand) {
+    continue;
+  }
 
-      const isKnownDomain = officialDomains.some(domain =>
-        hostname === domain || hostname.endsWith(`.${domain}`)
-      );
+  const isKnownDomain = officialDomains.some(domain =>
+    hostname === domain || hostname.endsWith(`.${domain}`)
+  );
 
-      if (!isKnownDomain) {
-        detectedBrands.push(brand);
-      }
-    }
+  if (!isKnownDomain) {
+    detectedBrands.push(brand);
+  }
+}
 
     if (detectedBrands.length > 0) {
   addWarning(
