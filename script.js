@@ -41,13 +41,19 @@ if (!form || !input || !results) {
         throw new Error("Unsupported protocol");
       }
 
-      if (
-        !url.hostname.includes(".") ||
-        url.hostname.startsWith(".") ||
-        url.hostname.endsWith(".")
-      ) {
-        throw new Error("Invalid hostname");
-      }
+     
+const hostname = url.hostname;
+const isIPv6Literal =
+  hostname.startsWith("[") && hostname.endsWith("]");
+
+if (
+  (!hostname.includes(".") && !isIPv6Literal) ||
+  hostname.startsWith(".") ||
+  hostname.endsWith(".")
+) {
+  throw new Error("Invalid hostname");
+}
+
     } catch {
       results.textContent =
         "Invalid URL format. Enter a web address such as https://example.com.";
