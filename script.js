@@ -280,12 +280,14 @@ if (isShortenedURL) {
 
 
     // 12. Encoded characters in the URL path or query.
-    if (/%[0-9a-f]{2}/i.test(fullURL)) {
-      addWarning(
-        "Contains percent-encoded characters. This is common on legitimate websites too, but inspect unfamiliar links carefully.",
-        5
-      );
-    }
+if (/%[0-9a-f]{2}/i.test(fullURL)) {
+  addWarning(
+    "Contains percent-encoded characters. This is common on legitimate websites too, but inspect unfamiliar links carefully.",
+    5,
+    "Percent-encoding represents certain characters using a percent sign followed by two hexadecimal digits, such as %20 for a space. It is widely used by legitimate websites, but unfamiliar or heavily encoded URLs can make parts of a link harder to read.",
+    "Check the hostname and the surrounding URL carefully. Do not assume encoded characters indicate phishing. If the link is unfamiliar or unexpected, visit the organization's official website directly."
+  );
+}
 
     score = Math.min(score, 100);
 
