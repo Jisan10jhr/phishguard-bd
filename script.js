@@ -43,14 +43,8 @@ if (!form || !input || !results) {
 
      
 const hostname = url.hostname;
-const isIPv6Literal =
-  hostname.startsWith("[") && hostname.endsWith("]");
 
-if (
-  (!hostname.includes(".") && !isIPv6Literal) ||
-  hostname.startsWith(".") ||
-  hostname.endsWith(".")
-) {
+if (!hostname) {
   throw new Error("Invalid hostname");
 }
 
