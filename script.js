@@ -165,13 +165,15 @@ if (raw.length > 100) {
   );
 }
 
-    // 8. @ symbol in the raw URL can make the destination confusing.
-    if (raw.includes("@")) {
-      addWarning(
-        "Contains an @ symbol. In a URL, text before @ may be interpreted as user information, while the hostname comes after it.",
-        15
-      );
-    }
+   // 8. @ symbol in the raw URL can make the destination confusing.
+if (raw.includes("@")) {
+  addWarning(
+    "Contains an @ symbol. In a URL, text before @ may be interpreted as user information, while the hostname comes after it.",
+    15,
+    "In URLs, an @ symbol can separate user information from the actual hostname. A deceptive link may place a familiar-looking name before @ to make the destination appear trustworthy, even though the real hostname comes after it.",
+    "Read the URL carefully and identify the hostname after the @ symbol. Do not rely on familiar-looking text before it. If the destination is unfamiliar, avoid opening the link and visit the organization's official website directly."
+  );
+}
 
     // 9. Suspicious terms in the hostname.
     // These terms can occur on legitimate websites too.
