@@ -31,9 +31,9 @@ function analyzeURL(rawInput) {
       throw new Error("Unsupported protocol");
     }
 
-    if (!url.hostname) {
-      throw new Error("Invalid hostname");
-    }
+    if (!url.hostname || /[%\s]/.test(url.hostname)) {
+  throw new Error("Invalid hostname");
+}
   } catch {
     return {
       valid: false,
