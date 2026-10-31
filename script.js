@@ -167,13 +167,15 @@ if (raw.length > 100) {
   );
 }
 
-   // 8. @ symbol in the raw URL can make the destination confusing.
-if (raw.includes("@")) {
+   // 8. Detect @ in the URL authority section.
+const hasAtInAuthority = url.host !== url.hostname;
+
+if (hasAtInAuthority) {
   addWarning(
-    "Contains an @ symbol. In a URL, text before @ may be interpreted as user information, while the hostname comes after it.",
-    15,
-    "In URLs, an @ symbol can separate user information from the actual hostname. A deceptive link may place a familiar-looking name before @ to make the destination appear trustworthy, even though the real hostname comes after it.",
-    "Read the URL carefully and identify the hostname after the @ symbol. Do not rely on familiar-looking text before it. If the destination is unfamiliar, avoid opening the link and visit the organization's official website directly."
+    "Contains user information before the hostname. Inspect the actual destination carefully.",
+    25,
+    "An @ symbol in the URL authority section can separate user information from the actual hostname. Deceptive links may place familiar-looking text before @ to disguise the real destination.",
+    "Identify the actual hostname shown after the @ symbol. Do not trust familiar-looking text before it. If the destination is unfamiliar, visit the organization's official website directly."
   );
 }
 
