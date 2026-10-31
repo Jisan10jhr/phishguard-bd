@@ -260,15 +260,17 @@ if (hostname.includes("-")) {
     ];
 
     const isShortenedURL = shortenerDomains.some(domain =>
-      hostname === domain || hostname.endsWith(`.${domain}`)
-    );
+  hostname === domain || hostname.endsWith(`.${domain}`)
+);
 
-    if (isShortenedURL) {
-      addWarning(
-        "Uses a URL shortening service. Shortened links hide their final destination. Check the destination through a trusted link-expansion service or an independently obtained official website before visiting.",
-        15
-      );
-    }
+if (isShortenedURL) {
+  addWarning(
+    "Uses a URL shortening service. Shortened links hide their final destination. Check the destination before visiting.",
+    15,
+    "URL shortening services redirect visitors to another address. Although many are legitimate, the shortened URL does not reveal the final destination, making it harder to recognize an unfamiliar or deceptive website.",
+    "If you don't recognize the sender, avoid opening the shortened link. Verify the destination using a reputable link-expansion service or visit the organization's official website directly."
+  );
+}
 
 
     // 12. Encoded characters in the URL path or query.
