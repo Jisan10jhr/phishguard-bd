@@ -86,13 +86,15 @@ if (
     }
 
 
-    // 1. HTTP instead of HTTPS.
-    if (url.protocol !== "https:") {
-      addWarning(
-        "Uses HTTP rather than HTTPS. The connection may not be encrypted.",
-        15
-      );
-    }
+   // 1. HTTP instead of HTTPS.
+if (url.protocol !== "https:") {
+  addWarning(
+    "Uses HTTP rather than HTTPS. The connection may not be encrypted.",
+    15,
+    "HTTPS helps protect data exchanged between your browser and a website through encryption. An HTTP connection does not provide this protection, so information may be exposed or modified in transit.",
+    "Avoid entering passwords, payment details, or personal information on HTTP pages. If the organization offers an official HTTPS website, use that address instead."
+  );
+}
 
     // 2. Credentials embedded before the hostname.
     if (url.username || url.password) {
