@@ -229,12 +229,13 @@ if (hostname.includes("-")) {
     }
 
     if (detectedBrands.length > 0) {
-      addWarning(
-        `The hostname contains a familiar brand name (${detectedBrands.join(", ")}) but does not match the limited list of recognized official domains. It may be impersonating a brand. Verify the exact domain using the brand's official website.`,
-        20
-      );
-    }
-
+  addWarning(
+    `The hostname contains a familiar brand name (${detectedBrands.join(", ")}) but does not match the limited list of recognized official domains. It may be impersonating a brand. Verify the exact domain using the brand's official website.`,
+    20,
+    "Scammers may include a well-known company or brand name in an unrelated domain to make a deceptive website appear trustworthy. A brand name alone does not establish who owns or operates the website.",
+    "Do not use the link to sign in or make payments. Visit the brand's official website by typing its known address yourself, and compare the exact domain."
+  );
+}
     // 11. URL shortener detection.
     // Shortened links hide their final destination.
     // This does not mean the link is malicious.
