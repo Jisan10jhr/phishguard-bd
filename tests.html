@@ -62,6 +62,8 @@
 
   <div id="test-results"></div>
   <div id="summary"></div>
+    
+  <script src="url-analyzer.js"></script>
 
   <script>
     const testCases = [
@@ -104,6 +106,16 @@
         name: "Encoded URL",
         url: "https://example.com/?next=%2Flogin",
         expectedScore: 5
+      },
+      {
+        name: "Unsupported JavaScript protocol",
+        url: "javascript:alert(1)",
+        expectedValid: false
+      },
+      {
+        name: "Credentials in URL",
+        url: "https://trusted-name@example.com/login",
+        expectedScore: 25
       }
     ];
 
@@ -117,6 +129,19 @@
       let failed = 0;
 
       testCases.forEach(function (test) {
+        const actual = analyzeURL(test.url);
+
+        const isPassed = test.expectedValid === false
+          ? actual.valid === false
+          : actual.valid === true &&
+            actual.score === test.expectedScore;
+
+        if (isPassed) {
+          passed++;
+        } else {
+          failed++;
+        }
+
         const result = document.createElement("div");
         result.classList.add("test");
 
@@ -124,17 +149,30 @@
         title.textContent = test.name;
 
         const detail = document.createElement("p");
-        detail.textContent = "Expected score: " + test.expectedScore;
 
-        result.append(title, detail);
+        if (test.expectedValid === false) {
+          detail.textContent = actual.valid
+            ? "Expected: Invalid URL | Actual: Valid URL"
+            : "Correctly rejected invalid URL.";
+        } else {
+          detail.textContent =
+            "Expected score: " + test.expectedScore +
+            " | Actual score: " +
+            (actual.valid ? actual.score : "Invalid URL");
+        }
 
+        const status = document.createElement("p");
+        status.textContent = isPassed ? "PASS" : "FAIL";
+        status.classList.add(isPassed ? "pass" : "fail");
+
+        result.append(title, detail, status);
         results.appendChild(result);
       });
 
       summary.textContent =
-        "Test cases loaded: " + testCases.length +
-        ". Analysis connection will be added next.";
-
+        "Passed: " + passed +
+        " | Failed: " + failed +
+        " | Total: " + testCases.length;
     });
   </script>
 
