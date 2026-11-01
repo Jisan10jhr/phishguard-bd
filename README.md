@@ -46,6 +46,7 @@ These scores are illustrative heuristic results, not probabilities of malicious 
 ## Project Pages
 
 - [Homepage and URL Scanner](https://jisan10jhr.github.io/phishguard-bd/)
+- [About PhishGuard BD](https://jisan10jhr.github.io/phishguard-bd/about.html)
 - [Phishing Awareness](https://jisan10jhr.github.io/phishguard-bd/phishing.html)
 - [Suspicious Link Safety](https://jisan10jhr.github.io/phishguard-bd/link-safety.html)
 - [Account Security](https://jisan10jhr.github.io/phishguard-bd/account-security.html)
